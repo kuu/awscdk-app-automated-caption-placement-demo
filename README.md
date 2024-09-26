@@ -4,11 +4,11 @@ AWS CDK app for deploying the necessary resources for the automated caption plac
 
 ## Demo
 Uploading a video file to S3 bucket triggers the following jobs:
-* Extract captions from the video file's audio track using Amazon Transcribe API
-* Detect faces in the video using Amazon Rekognition Face Detection API
-* Detect texts in the video using Amazon Rekognition Text Detection API
-* Manipulate the captions file based on the geometry information obtained from the face/text detections
-* Transcode the video/captions file into HLS streams 
+* Extract captions from the video file's audio track using [Amazon Transcribe API](https://docs.aws.amazon.com/transcribe/latest/APIReference/API_GetTranscriptionJob.html)
+* Detect faces in the video using [Amazon Rekognition Face Detection API](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_GetFaceDetection.html)
+* Detect texts in the video using [Amazon Rekognition Text Detection API](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_GetTextDetection.html)
+* Manipulate the [captions file](https://www.w3.org/TR/webvtt1/#styling) based on the geometry information obtained from the face/text detections
+* Transcode the video/captions file into HLS streams using [AWS Elemental MediaConvert](https://docs.aws.amazon.com/mediaconvert/latest/ug/WebVTT-in-HLS.html)
 
 ![diagram.png](./diagram.png)
 
@@ -31,8 +31,12 @@ $ npx cdk deploy
 ### Resources
 The following resources will be deployed:
 * AWS::S3::Bucket x 2
-* AWS::Lambda::Function x 5
-* AWS::SNS::Topic
+* AWS::Events::Rule x 1
+* AWS::StepFunctions::StateMachine x 1
+* AWS::Lambda::Function x 12
+* AWS::SNS::Topic x 2
+* AWS::SQS::Queue x 2
+* AWS::CloudFront::Distribution x 1
 
 ### Outputs
 After the deployment, the following output will be printed:
@@ -41,11 +45,6 @@ After the deployment, the following output will be printed:
 * EventBridgeRuleName: The EventBridge Rule to recieve S3 notifications and trigger the StepFunction state machine
 * PlaybackUrl1: HLS playlist transcoded with the original caption
 * PlaybackUrl2: HLS playlist transcoded with the styled caption
-
-## Run
-1. Upload a video file to the input S3 bucket
-2. Check that the EventBridge Rule has triggered a StepFunction state machine job
-3. After the job completes, play back the HLS playlist
 
 ## Cleanup
 ```
