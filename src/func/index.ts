@@ -114,7 +114,7 @@ export async function handler(event: any) {
 
   // Parse the files and add styles to the WevVTT file
   const vtt = VTT.parse(captionStr, { strict: false });
-  const facesArray:{Timestamp: number; Face: {BoundingBox: {Left: number; Top: number; Width: number; Height: number}}}[]
+  const facesArray:{ Timestamp: number; Face: { BoundingBox: { Left: number; Top: number; Width: number; Height: number } } }[]
     = JSON.parse(facesStr as string);
   const faceCoordinates = facesArray.map(
     (
@@ -207,7 +207,7 @@ export async function handler(event: any) {
 
 const MARGIN = 0.075;
 
-function getCoexistingObjects(cue: {start: number; end: number}, objects: {t: number; pos: Coordinates}[]): Coordinates[] {
+function getCoexistingObjects(cue: { start: number; end: number }, objects: { t: number; pos: Coordinates }[]): Coordinates[] {
   const results: Coordinates[] = [];
   for (const { t, pos } of objects) {
     const lower = t - MARGIN;
