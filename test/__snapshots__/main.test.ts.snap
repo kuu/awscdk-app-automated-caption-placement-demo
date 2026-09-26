@@ -37,7 +37,7 @@ exports[`Snapshot 1`] = `
           ],
         },
       },
-      "Value": "s3://d8aa8219-6f77-4727-bfcf-7a70844e9f9f/",
+      "Value": "s3://d9ce26e5-233b-4535-be0d-280b6e907752/",
     },
     "OutputBucket": {
       "Description": "S3 bucket for output files",
@@ -54,7 +54,7 @@ exports[`Snapshot 1`] = `
           ],
         },
       },
-      "Value": "s3://d21020a3-d428-4dc1-b794-5ceb4b5a58d4/",
+      "Value": "s3://5b24c56a-1657-479b-bded-3aac211bc6d9/",
     },
     "PlaybackUrl1": {
       "Description": "HLS video playback URL for the original captions",
@@ -127,6 +127,117 @@ exports[`Snapshot 1`] = `
     },
   },
   "Resources": {
+    "5b24c56a1657479bbded3aac211bc6d9AutoDeleteObjectsCustomResource0B1E03B3": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "5b24c56a1657479bbded3aac211bc6d9PolicyC097108A",
+      ],
+      "Properties": {
+        "BucketName": {
+          "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "5b24c56a1657479bbded3aac211bc6d9E6454B10": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketName": "5b24c56a-1657-479b-bded-3aac211bc6d9",
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "5b24c56a1657479bbded3aac211bc6d9PolicyC097108A": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutBucketPolicy",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "5b24c56a1657479bbded3aac211bc6d9E6454B10",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "5b24c56a1657479bbded3aac211bc6d9E6454B10",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "CanonicalUser": {
+                  "Fn::GetAtt": [
+                    "OAIE1EFC67F",
+                    "S3CanonicalUserId",
+                  ],
+                },
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "5b24c56a1657479bbded3aac211bc6d9E6454B10",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
     "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691": {
       "DependsOn": [
         "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
@@ -305,7 +416,7 @@ def sort_filter_rules(json_obj):
             [
               "Lambda function for auto-deleting objects in ",
               {
-                "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
               },
               " S3 bucket.",
             ],
@@ -372,7 +483,7 @@ def sort_filter_rules(json_obj):
             {
               "DomainName": {
                 "Fn::GetAtt": [
-                  "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+                  "5b24c56a1657479bbded3aac211bc6d9E6454B10",
                   "RegionalDomainName",
                 ],
               },
@@ -535,7 +646,7 @@ def sort_filter_rules(json_obj):
           "Variables": {
             "NODE_ENV": "test",
             "OUTPUT_BUCKET_NAME": {
-              "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+              "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
             },
           },
         },
@@ -753,7 +864,7 @@ def sort_filter_rules(json_obj):
         "Environment": {
           "Variables": {
             "INPUT_BUCKET_NAME": {
-              "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+              "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
             },
             "NODE_ENV": "test",
             "ROLE_ARN_TO_ALLOW_REKOGNITION_TO_PUBLISH_TO_SNS_TOPIC": {
@@ -1051,7 +1162,7 @@ def sort_filter_rules(json_obj):
           "resources": [
             {
               "Fn::GetAtt": [
-                "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                "d9ce26e5233b4535be0d280b6e907752499A8050",
                 "Arn",
               ],
             },
@@ -1208,15 +1319,15 @@ def sort_filter_rules(json_obj):
               },
               "","Settings":{"Inputs":[{"FileInput.$.$":"States.Format('s3://",
               {
-                "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
               },
               "/{}', $.video)","VideoSelector":{},"AudioSelectors":{"Audio Selector 1":{"DefaultSelection":"DEFAULT"}},"CaptionSelectors":{"Captions Selector 1":{"SourceSettings":{"SourceType":"WEBVTT","FileSourceSettings":{"SourceFile.$.$":"States.Format('s3://",
               {
-                "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+                "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
               },
               "/{}', $.originalCaption)"}}}},"TimecodeSource":"ZEROBASED"}],"OutputGroups":[{"Name":"Apple HLS","OutputGroupSettings":{"Type":"HLS_GROUP_SETTINGS","HlsGroupSettings":{"SegmentLength":6,"Destination":"s3://",
               {
-                "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+                "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
               },
               "/original-caption/index","MinSegmentLength":0}},"Outputs":[{"ContainerSettings":{"Container":"M3U8","M3u8Settings":{}},"VideoDescription":{"CodecSettings":{"Codec":"H_264","H264Settings":{"MaxBitrate":1500000,"RateControlMode":"QVBR","SceneChangeDetect":"TRANSITION_DETECTION"}}},"AudioDescriptions":[{"AudioSourceName":"Audio Selector 1","CodecSettings":{"Codec":"AAC","AacSettings":{"Bitrate":96000,"CodingMode":"CODING_MODE_2_0","SampleRate":48000}}}],"OutputSettings":{"HlsSettings":{}},"NameModifier":"_main"},{"ContainerSettings":{"Container":"M3U8","M3u8Settings":{}},"OutputSettings":{"HlsSettings":{}},"NameModifier":"_caption","CaptionDescriptions":[{"CaptionSelectorName":"Captions Selector 1","DestinationSettings":{"DestinationType":"WEBVTT","WebvttDestinationSettings":{"StylePassthrough":"ENABLED"}},"LanguageCode":"ENG"}]}]}],"TimecodeConfig":{"Source":"ZEROBASED"},"FollowSource":1},"AccelerationSettings":{"Mode":"DISABLED"},"StatusUpdateInterval":"SECONDS_60","Priority":0}}}},{"StartAt":"Run MediaConvert Job - Styled captions","States":{"Run MediaConvert Job - Styled captions":{"End":true,"Type":"Task","InputPath":"$.Payload","Resource":"arn:",
               {
@@ -1231,15 +1342,15 @@ def sort_filter_rules(json_obj):
               },
               "","Settings":{"Inputs":[{"FileInput.$.$":"States.Format('s3://",
               {
-                "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
               },
               "/{}', $.video)","VideoSelector":{},"AudioSelectors":{"Audio Selector 1":{"DefaultSelection":"DEFAULT"}},"CaptionSelectors":{"Captions Selector 1":{"SourceSettings":{"SourceType":"WEBVTT","FileSourceSettings":{"SourceFile.$.$":"States.Format('s3://",
               {
-                "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+                "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
               },
               "/{}', $.styledCaption)"}}}},"TimecodeSource":"ZEROBASED"}],"OutputGroups":[{"Name":"Apple HLS","OutputGroupSettings":{"Type":"HLS_GROUP_SETTINGS","HlsGroupSettings":{"SegmentLength":6,"Destination":"s3://",
               {
-                "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+                "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
               },
               "/styled-caption/index","MinSegmentLength":0}},"Outputs":[{"ContainerSettings":{"Container":"M3U8","M3u8Settings":{}},"VideoDescription":{"CodecSettings":{"Codec":"H_264","H264Settings":{"MaxBitrate":1500000,"RateControlMode":"QVBR","SceneChangeDetect":"TRANSITION_DETECTION"}}},"AudioDescriptions":[{"AudioSourceName":"Audio Selector 1","CodecSettings":{"Codec":"AAC","AacSettings":{"Bitrate":96000,"CodingMode":"CODING_MODE_2_0","SampleRate":48000}}}],"OutputSettings":{"HlsSettings":{}},"NameModifier":"_main"},{"ContainerSettings":{"Container":"M3U8","M3u8Settings":{}},"OutputSettings":{"HlsSettings":{}},"NameModifier":"_caption","CaptionDescriptions":[{"CaptionSelectorName":"Captions Selector 1","DestinationSettings":{"DestinationType":"WEBVTT","WebvttDestinationSettings":{"StylePassthrough":"ENABLED"}},"LanguageCode":"ENG"}]}]}],"TimecodeConfig":{"Source":"ZEROBASED"},"FollowSource":1},"AccelerationSettings":{"Mode":"DISABLED"},"StatusUpdateInterval":"SECONDS_60","Priority":0}}}}]}}}",
             ],
@@ -1619,7 +1730,7 @@ def sort_filter_rules(json_obj):
           "Variables": {
             "NODE_ENV": "test",
             "OUTPUT_BUCKET_NAME": {
-              "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+              "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
             },
           },
         },
@@ -1837,7 +1948,7 @@ def sort_filter_rules(json_obj):
         "Environment": {
           "Variables": {
             "INPUT_BUCKET_NAME": {
-              "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+              "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
             },
             "NODE_ENV": "test",
             "ROLE_ARN_TO_ALLOW_REKOGNITION_TO_PUBLISH_TO_SNS_TOPIC": {
@@ -2189,11 +2300,11 @@ def sort_filter_rules(json_obj):
         "Environment": {
           "Variables": {
             "INPUT_BUCKET_NAME": {
-              "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+              "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
             },
             "NODE_ENV": "test",
             "OUTPUT_BUCKET_NAME": {
-              "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+              "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
             },
             "ROLE_ARN": {
               "Fn::GetAtt": [
@@ -2347,7 +2458,7 @@ def sort_filter_rules(json_obj):
           "Variables": {
             "NODE_ENV": "test",
             "S3_BUCKET_NAME": {
-              "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+              "Ref": "5b24c56a1657479bbded3aac211bc6d9E6454B10",
             },
           },
         },
@@ -2438,14 +2549,28 @@ def sort_filter_rules(json_obj):
       },
       "Type": "AWS::IAM::Policy",
     },
-    "d21020a3d4284dc1b7945ceb4b5a58d4AutoDeleteObjectsCustomResourceB0299D3D": {
+    "d9ce26e5233b4535be0d280b6e907752499A8050": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketName": "d9ce26e5-233b-4535-be0d-280b6e907752",
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "d9ce26e5233b4535be0d280b6e907752AutoDeleteObjectsCustomResource6432F652": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
-        "d21020a3d4284dc1b7945ceb4b5a58d4Policy681E779E",
+        "d9ce26e5233b4535be0d280b6e907752Policy01B255DC",
       ],
       "Properties": {
         "BucketName": {
-          "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
+          "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
         },
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -2457,139 +2582,14 @@ def sort_filter_rules(json_obj):
       "Type": "Custom::S3AutoDeleteObjects",
       "UpdateReplacePolicy": "Delete",
     },
-    "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "BucketName": "d21020a3-d428-4dc1-b794-5ceb4b5a58d4",
-        "Tags": [
-          {
-            "Key": "aws-cdk:auto-delete-objects",
-            "Value": "true",
-          },
-        ],
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "d21020a3d4284dc1b7945ceb4b5a58d4Policy681E779E": {
-      "Properties": {
-        "Bucket": {
-          "Ref": "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:PutBucketPolicy",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
-                    "Arn",
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "s3:GetObject",
-              "Effect": "Allow",
-              "Principal": {
-                "CanonicalUser": {
-                  "Fn::GetAtt": [
-                    "OAIE1EFC67F",
-                    "S3CanonicalUserId",
-                  ],
-                },
-              },
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    {
-                      "Fn::GetAtt": [
-                        "d21020a3d4284dc1b7945ceb4b5a58d4C99FE842",
-                        "Arn",
-                      ],
-                    },
-                    "/*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
-    "d8aa82196f774727bfcf7a70844e9f9fAutoDeleteObjectsCustomResource130462C4": {
-      "DeletionPolicy": "Delete",
+    "d9ce26e5233b4535be0d280b6e907752NotificationsA494A246": {
       "DependsOn": [
-        "d8aa82196f774727bfcf7a70844e9f9fPolicy0EA473F0",
+        "d9ce26e5233b4535be0d280b6e907752NotificationsHandlerPolicyB4C9D09F",
+        "d9ce26e5233b4535be0d280b6e907752Policy01B255DC",
       ],
       "Properties": {
         "BucketName": {
-          "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
-        },
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "Custom::S3AutoDeleteObjects",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "d8aa82196f774727bfcf7a70844e9f9fD1364ABA": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "BucketName": "d8aa8219-6f77-4727-bfcf-7a70844e9f9f",
-        "Tags": [
-          {
-            "Key": "aws-cdk:auto-delete-objects",
-            "Value": "true",
-          },
-        ],
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "d8aa82196f774727bfcf7a70844e9f9fNotifications182496B0": {
-      "DependsOn": [
-        "d8aa82196f774727bfcf7a70844e9f9fNotificationsHandlerPolicy24F8D694",
-        "d8aa82196f774727bfcf7a70844e9f9fPolicy0EA473F0",
-      ],
-      "Properties": {
-        "BucketName": {
-          "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+          "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
         },
         "Managed": true,
         "NotificationConfiguration": {
@@ -2605,7 +2605,7 @@ def sort_filter_rules(json_obj):
       },
       "Type": "Custom::S3BucketNotifications",
     },
-    "d8aa82196f774727bfcf7a70844e9f9fNotificationsHandlerPolicy24F8D694": {
+    "d9ce26e5233b4535be0d280b6e907752NotificationsHandlerPolicyB4C9D09F": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -2614,7 +2614,7 @@ def sort_filter_rules(json_obj):
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                  "d9ce26e5233b4535be0d280b6e907752499A8050",
                   "Arn",
                 ],
               },
@@ -2622,7 +2622,7 @@ def sort_filter_rules(json_obj):
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "d8aa82196f774727bfcf7a70844e9f9fNotificationsHandlerPolicy24F8D694",
+        "PolicyName": "d9ce26e5233b4535be0d280b6e907752NotificationsHandlerPolicyB4C9D09F",
         "Roles": [
           {
             "Ref": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC",
@@ -2631,10 +2631,10 @@ def sort_filter_rules(json_obj):
       },
       "Type": "AWS::IAM::Policy",
     },
-    "d8aa82196f774727bfcf7a70844e9f9fPolicy0EA473F0": {
+    "d9ce26e5233b4535be0d280b6e907752Policy01B255DC": {
       "Properties": {
         "Bucket": {
-          "Ref": "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+          "Ref": "d9ce26e5233b4535be0d280b6e907752499A8050",
         },
         "PolicyDocument": {
           "Statement": [
@@ -2657,7 +2657,7 @@ def sort_filter_rules(json_obj):
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                    "d9ce26e5233b4535be0d280b6e907752499A8050",
                     "Arn",
                   ],
                 },
@@ -2667,7 +2667,7 @@ def sort_filter_rules(json_obj):
                     [
                       {
                         "Fn::GetAtt": [
-                          "d8aa82196f774727bfcf7a70844e9f9fD1364ABA",
+                          "d9ce26e5233b4535be0d280b6e907752499A8050",
                           "Arn",
                         ],
                       },
